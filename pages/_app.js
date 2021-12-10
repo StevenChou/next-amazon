@@ -5,9 +5,9 @@ import '../styles/globals.css';
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // refresh 後，
+    console.log('===> Refresh!!');
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
-      console.log('hello');
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
