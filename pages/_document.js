@@ -4,7 +4,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 export default class MyDocument extends Document {
   render() {
-    console.log('===> MyDocument');
+    console.log('===>[Server] MyDocument');
     return (
       <Html lang="en">
         <Head></Head>
@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
 }
 
 MyDocument.getInitialProps = async (ctx) => {
-  console.log('===> server side stylesheets');
+  console.log('===>[Server] stylesheets');
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
