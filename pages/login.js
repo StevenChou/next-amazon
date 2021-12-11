@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 
 import {
   List,
@@ -10,14 +11,28 @@ import {
   Link,
 } from '@material-ui/core';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
+import { Store } from '../utils/Store';
 import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 
 export default function Login() {
+  const router = useRouter();
+  const { state, dispatch } = useContext(Store);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, []);
+
+  const { redirect } = router.query; // login?redirect=/shipping
+  const { userInfo } = state;
   const classes = useStyles();
+
+  console.log('****===> login');
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -28,6 +43,10 @@ export default function Login() {
         password,
       });
       alert('success login');
+
+      dispatch({ type: 'USER_LOGIN', payload: data });
+      Cookies.set('userInfo', data);
+      router.push(redirect || '/');
     } catch (err) {
       alert(err.response.data ? err.response.data.message : err.message);
     }
