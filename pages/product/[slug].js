@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Image from 'next/image';
 
@@ -23,11 +23,11 @@ import Product from '../../models/Product';
 import useStyles from './../../utils/styles';
 
 export default function ProductScreen(props) {
+  const router = useRouter();
   const { dispatch } = useContext(Store);
   const { product } = props;
 
   const classes = useStyles();
-  // const router = useRouter();
   // const { slug } = router.query;
 
   // const product = data.products.find((product) => {
@@ -46,6 +46,8 @@ export default function ProductScreen(props) {
     }
 
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity: 1 } });
+
+    router.push('/cart');
   };
 
   return (
