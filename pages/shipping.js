@@ -25,11 +25,6 @@ export default function Shipping() {
   } = useForm();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const {
-    userInfo,
-    cart: { shippingAddress },
-  } = state;
-
   useEffect(() => {
     if (!userInfo) {
       router.push('/login?redirect=/shipping');
@@ -40,8 +35,12 @@ export default function Shipping() {
     setValue('city', shippingAddress.city);
     setValue('postalCode', shippingAddress.postalCode);
     setValue('country', shippingAddress.country);
-  }, []);
+  }, [userInfo, shippingAddress]);
 
+  const {
+    userInfo,
+    cart: { shippingAddress },
+  } = state;
   const classes = useStyles();
 
   const submitHandler = ({ fullName, address, city, postalCode, country }) => {
