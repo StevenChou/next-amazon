@@ -8,6 +8,7 @@ import { signToken } from '../../../utils/auth';
 
 const handler = nc();
 
+// 未做 Exception 控制
 handler.post(async (req, res) => {
   await db.connect();
   const newUser = new User({
