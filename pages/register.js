@@ -20,6 +20,7 @@ import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 
 export default function Register() {
+  const classes = useStyles();
   const {
     handleSubmit,
     control,
@@ -28,15 +29,14 @@ export default function Register() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
   useEffect(() => {
     if (userInfo) {
       router.push('/');
     }
-  }, []);
+  }, [userInfo]);
 
   const { redirect } = router.query;
-  const { userInfo } = state;
-  const classes = useStyles();
 
   const submitHandler = async ({ name, email, password, confirmPassword }) => {
     closeSnackbar();

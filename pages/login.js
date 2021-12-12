@@ -20,6 +20,7 @@ import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 
 export default function Login() {
+  const classes = useStyles();
   const {
     handleSubmit,
     control,
@@ -28,15 +29,14 @@ export default function Login() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
   useEffect(() => {
     if (userInfo) {
       router.push('/');
     }
-  }, []);
+  }, [userInfo]);
 
   const { redirect } = router.query; // login?redirect=/shipping
-  const { userInfo } = state;
-  const classes = useStyles();
 
   console.log('****===> login');
 

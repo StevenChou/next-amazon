@@ -20,10 +20,14 @@ import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 
 export default function Payment() {
+  const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState('');
   const { state, dispatch } = useContext(Store);
+  const {
+    cart: { shippingAddress },
+  } = state;
   useEffect(() => {
     if (!shippingAddress.address) {
       router.push('/shipping');
@@ -31,11 +35,6 @@ export default function Payment() {
       setPaymentMethod(Cookies.get('paymentMethod') || '');
     }
   }, [shippingAddress]);
-
-  const {
-    cart: { shippingAddress },
-  } = state;
-  const classes = useStyles();
 
   const submitHandler = (e) => {
     closeSnackbar();
