@@ -264,4 +264,5 @@ export async function getServerSideProps({ params }) {
   return { props: { params } };
 }
 
+// for client side
 export default dynamic(() => Promise.resolve(Order), { ssr: false });
