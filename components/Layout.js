@@ -9,7 +9,7 @@ import {
   Badge,
   Button,
   Container,
-  createMuiTheme,
+  createTheme,
   CssBaseline,
   Link,
   Menu,
@@ -30,7 +30,7 @@ export default function Layout({ title, description, children }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const { darkMode, cart, userInfo } = state;
-  const theme = createMuiTheme({
+  const theme = createTheme({
     typography: {
       h1: {
         fontSize: '1.6rem',
