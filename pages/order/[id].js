@@ -108,7 +108,7 @@ function Order({ params }) {
     if (!order._id || successPay || (order._id && order._id !== orderId)) {
       fetchOrder();
 
-      // 關閉 paypal button
+      // 關閉 paypal button??
       if (successPay) {
         dispatch({ type: 'PAY_RESET' });
       }
