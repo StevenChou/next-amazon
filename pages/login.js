@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 
 import { Store } from '../utils/Store';
+import { getError } from '../utils/error';
 import Layout from '../components/Layout';
 import useStyles from '../utils/styles';
 
@@ -55,10 +56,7 @@ export default function Login() {
 
       router.push(redirect || '/');
     } catch (err) {
-      enqueueSnackbar(
-        err.response.data ? err.response.data.message : err.message,
-        { variant: 'error' }
-      );
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
 
