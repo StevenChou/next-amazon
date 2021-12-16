@@ -185,7 +185,9 @@ function AdminDashboard() {
                     ],
                   }}
                   options={{
-                    legend: { display: true, position: 'right' },
+                    plugins: {
+                      legend: { display: true, position: 'right' },
+                    },
                   }}
                 ></Bar>
               </ListItem>
