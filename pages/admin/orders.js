@@ -68,8 +68,9 @@ function AdminDashboard() {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
+
     fetchData();
-  }, []);
+  }, [userInfo]);
 
   return (
     <Layout title="Orders">
