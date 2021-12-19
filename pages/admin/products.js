@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 import {
   CircularProgress,
   Grid,
@@ -34,6 +35,20 @@ function reducer(state, action) {
       return { ...state, loading: false, products: action.payload, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+    case 'CREATE_REQUEST':
+      return { ...state, loadingCreate: true };
+    case 'CREATE_SUCCESS':
+      return { ...state, loadingCreate: false };
+    case 'CREATE_FAIL':
+      return { ...state, loadingCreate: false };
+    case 'DELETE_REQUEST':
+      return { ...state, loadingDelete: true };
+    case 'DELETE_SUCCESS':
+      return { ...state, loadingDelete: false, successDelete: true };
+    case 'DELETE_FAIL':
+      return { ...state, loadingDelete: false };
+    case 'DELETE_RESET':
+      return { ...state, loadingDelete: false, successDelete: false };
     default:
       state;
   }
@@ -42,10 +57,14 @@ function reducer(state, action) {
 function AdminDashboard() {
   const { state } = useContext(Store);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { userInfo } = state;
 
-  const [{ loading, error, products }, dispatch] = useReducer(reducer, {
+  const [
+    { loading, error, products, loadingCreate, successDelete, loadingDelete },
+    dispatch,
+  ] = useReducer(reducer, {
     loading: true,
     products: [],
     error: '',
@@ -68,8 +87,63 @@ function AdminDashboard() {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
-    fetchData();
-  }, []);
+
+    if (successDelete) {
+      dispatch({ type: 'DELETE_RESET' });
+    } else {
+      fetchData();
+    }
+  }, [userInfo, successDelete]);
+
+  const createHandler = async () => {
+    if (!window.confirm('Are you sure?')) {
+      return;
+    }
+
+    try {
+      dispatch({ type: 'CREATE_REQUEST' });
+
+      const { data } = await axios.post(
+        `/api/admin/products`,
+        {},
+        {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+
+      dispatch({ type: 'CREATE_SUCCESS' });
+
+      enqueueSnackbar('Product created successfully', { variant: 'success' });
+      // 先建立一筆範本，再導去修改頁面！！
+      router.push(`/admin/product/${data.product._id}`);
+    } catch (err) {
+      dispatch({ type: 'CREATE_FAIL' });
+
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
+
+  const deleteHandler = async (productId) => {
+    if (!window.confirm('Are you sure?')) {
+      return;
+    }
+
+    try {
+      dispatch({ type: 'DELETE_REQUEST' });
+
+      await axios.delete(`/api/admin/products/${productId}`, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
+
+      dispatch({ type: 'DELETE_SUCCESS' });
+
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+    } catch (err) {
+      dispatch({ type: 'DELETE_FAIL' });
+
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
 
   return (
     <Layout title="Products">
@@ -99,9 +173,24 @@ function AdminDashboard() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
-                  Products
-                </Typography>
+                <Grid container alignItems="center">
+                  <Grid item xs={6}>
+                    <Typography component="h1" variant="h1">
+                      Products
+                    </Typography>
+                    {loadingDelete && <CircularProgress />}
+                  </Grid>
+                  <Grid align="right" item xs={6}>
+                    <Button
+                      onClick={createHandler}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Create
+                    </Button>
+                    {loadingCreate && <CircularProgress />}
+                  </Grid>
+                </Grid>
               </ListItem>
 
               <ListItem>
@@ -143,7 +232,11 @@ function AdminDashboard() {
                                   Edit
                                 </Button>
                               </NextLink>{' '}
-                              <Button size="small" variant="contained">
+                              <Button
+                                onClick={() => deleteHandler(product._id)}
+                                size="small"
+                                variant="contained"
+                              >
                                 Delete
                               </Button>
                             </TableCell>
