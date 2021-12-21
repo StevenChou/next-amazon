@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie';
 import MenuIcon from '@material-ui/icons/Menu';
 import CancelIcon from '@material-ui/icons/Cancel';
+import SearchIcon from '@material-ui/icons/Search';
 import {
   AppBar,
   Badge,
@@ -30,6 +31,7 @@ import {
   ListItem,
   Divider,
   ListItemText,
+  InputBase,
 } from '@material-ui/core';
 
 import { Store } from '../utils/Store';
@@ -42,6 +44,7 @@ export default function Layout({ title, description, children }) {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const [categories, setCategories] = useState([]);
+  const [query, setQuery] = useState('');
   const { enqueueSnackbar } = useSnackbar();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -82,6 +85,15 @@ export default function Layout({ title, description, children }) {
 
     fetchCategories();
   }, []);
+
+  const queryChangeHandler = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    router.push(`/search?query=${query}`);
+  };
 
   const sidebarOpenHandler = () => {
     setSidebarVisible(true);
@@ -134,6 +146,7 @@ export default function Layout({ title, description, children }) {
                 edge="start"
                 aria-label="open drawer"
                 onClick={sidebarOpenHandler}
+                className={classes.menuButton}
               >
                 <MenuIcon className={classes.navbarButton} />
               </IconButton>
@@ -183,7 +196,26 @@ export default function Layout({ title, description, children }) {
               </List>
             </Drawer>
 
-            <div className={classes.grow}></div>
+            <div className={classes.searchSection}>
+              <form onSubmit={submitHandler} className={classes.searchForm}>
+                <InputBase
+                  name="query"
+                  className={classes.searchInput}
+                  placeholder="Search products"
+                  onChange={queryChangeHandler}
+                />
+                <IconButton
+                  type="submit"
+                  className={classes.iconButton}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </form>
+            </div>
+
+            {/* <div className={classes.grow}></div> */}
+
             <div>
               <Switch
                 checked={darkMode}
