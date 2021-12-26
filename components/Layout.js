@@ -127,6 +127,8 @@ export default function Layout({ title, description, children }) {
 
     Cookies.remove('userInfo');
     Cookies.remove('cartItems');
+    Cookies.remove('shippingAddress');
+    Cookies.remove('paymentMethod');
 
     router.push('/');
   };
