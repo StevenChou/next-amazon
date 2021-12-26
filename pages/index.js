@@ -1,24 +1,14 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
 
 import axios from 'axios';
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import Rating from '@material-ui/lab/Rating';
+import { Grid } from '@material-ui/core';
 
 // import data from './../utils/data';
 import db from '../utils/db';
 import Layout from '../components/Layout';
 import Product from '../models/Product';
+import ProductItem from '../components/ProductItem';
 import { Store } from '../utils/Store';
 
 export default function Home(props) {
@@ -50,31 +40,10 @@ export default function Home(props) {
           {products.map((product) => {
             return (
               <Grid item md={4} key={product.name}>
-                <Card>
-                  <NextLink href={`/product/${product.slug}`} passHref>
-                    <CardActionArea>
-                      <CardMedia
-                        component="img"
-                        image={product.image}
-                        title={product.name}
-                      ></CardMedia>
-                      <CardContent>
-                        <Typography>{product.name}</Typography>
-                        <Rating value={product.rating} readOnly></Rating>
-                      </CardContent>
-                    </CardActionArea>
-                  </NextLink>
-                  <CardActions>
-                    <Typography>${product.price}</Typography>
-                    <Button
-                      size="small"
-                      color="primary"
-                      onClick={() => addToCartHandler(product)}
-                    >
-                      Add to cart
-                    </Button>
-                  </CardActions>
-                </Card>
+                <ProductItem
+                  product={product}
+                  addToCartHandler={addToCartHandler}
+                />
               </Grid>
             );
           })}
