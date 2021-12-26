@@ -32,5 +32,8 @@
     "react-hook-form": "^7.21.2",
     "react-material-ui-carousel": "^3.1.1",
     "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0"
   }
 }
